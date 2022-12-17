@@ -1,6 +1,7 @@
 import React,{useState,useRef} from "react"
-import { Form, } from "react-bootstrap"
+import { Form, NavLink, } from "react-bootstrap"
 import classes from './Signupform.module.css'
+
 
 
 const Signup=()=>
@@ -71,6 +72,7 @@ return (
     <div className={classes.actions}>
       <button >SIGNUP</button>
       </div>
+      
       </section>
     </Form>
 
