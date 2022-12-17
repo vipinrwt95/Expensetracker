@@ -2,7 +2,7 @@ import React,{useState,useRef,useContext} from "react"
 import { Form, } from "react-bootstrap"
 import classes from './Signupform.module.css'
 import TokenContext from "../store/TokenContext"
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const Login=()=>
 {   const Navigate=useNavigate();
@@ -48,6 +48,7 @@ const Login=()=>
        }    
 
     return (
+        <>
             <Form onSubmit={formSubmitHandler}>
             <section className={classes.auth}>
         <h1>LOGIN</h1>
@@ -64,6 +65,10 @@ const Login=()=>
           </div>
           </section>
         </Form>
+        <div className={classes.control}>
+            <Link to='./reset'>Forgot password</Link>
+        </div>
+        </>
     
     )
 }
