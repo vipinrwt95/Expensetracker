@@ -37,6 +37,20 @@ const Home=()=>
       navigate('/')
       
     } 
+    const showExpensesHnadler=()=>
+    {
+     if(authctx.isLoggedIn)
+     {
+        navigate('/expenses');
+     }
+     else
+     {
+       alert('Please login to see expenses')
+       navigate('/');
+     }
+      
+    }
+    console.log(authctx)
 
   return(
        <>
@@ -44,6 +58,7 @@ const Home=()=>
         <button onClick={emailverificationHandler}>Verify Email</button>
         <p>Your profile is incomplete , <Link to='./profile'>complete now</Link></p>
         <Button onClick={logoutHandler}>Logout</Button>
+        <Button onClick={showExpensesHnadler}>Expenses</Button>
         </div>
         </>
     )
