@@ -5,13 +5,15 @@ import Auth from './Pages/Auth';
 import { TokenProvider } from './store/TokenContext';
 import {Route,Router,Routes} from 'react-router-dom'
 import Home from './Pages/Home';
+import Profile from './Pages/Profile';
 function App() {
   return (
     <TokenProvider>
       <div className="App">
     <Routes>
     <Route path='/' exact element={<Auth />}></Route>
-    <Route path='/home' exact element={ <Home />}>
+    <Route path='/home' exact element={ <Home />}></Route>
+     <Route path='/home/:user' element={<Profile />}>
    </Route>
     </Routes>
    </div>
