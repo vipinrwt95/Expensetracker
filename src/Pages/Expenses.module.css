@@ -14,10 +14,11 @@
     width: 95%;
     max-width: 25rem;
     border-radius: 6px;
-    background-color: #3f84ac;
+    background-color: #9ec8bc;
     box-shadow: 0 1px 4px rgba(220, 21, 21, 0.2);
     padding: 1rem;
     text-align: center;
+    color:#484646;
 
   }
   .new {
@@ -101,4 +102,15 @@
     align-items: center;
     justify-content: space-between;
     user-select: none;
+  }
+  .body2 {
+    margin: 1.5rem auto;
+    width: 55%;
+    max-width: 25rem;
+    border-radius: 6px;
+    background-color: #cbeab9;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 0.25rem;
+    text-align: center;
+    color:#b77be3;
   }

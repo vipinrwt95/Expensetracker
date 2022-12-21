@@ -1,10 +1,10 @@
 import Form from 'react-bootstrap/Form';
 import classes from './Expenses.module.css';
 import React,{useRef,useState,useCallback} from 'react';
-import { Container } from 'react-bootstrap';
+import { Container ,Overlay } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { isDOMComponent } from 'react-dom/test-utils';
+import Button from 'react-bootstrap/Button';
 
 
 const FIREBASE_DOMAIN="https://expense-tracker-25829-default-rtdb.firebaseio.com/";
@@ -18,12 +18,15 @@ const Expenses=()=>
     const categoryref=useRef();
     const [expenses,setExpenses]=useState([])
     const [storedexpenses,setAllExpenses]=useState([])
+    const [edit,setEditwindow]=useState(false);
+    const target = useRef(null);
   
 async function AddexpenseHandler(event){ 
     event.preventDefault()
     let amount=amountref.current.value;
     let description=descriptionref.current.value;
     let category=categoryref.current.value;
+   
 
     const expense={
      amount:amount,
@@ -47,7 +50,7 @@ async function AddexpenseHandler(event){
             setExpenses([...expenses,expense])
             
         }
-                 
+              
       }
      
       const dataexpenses= useCallback(async ()=>{
@@ -71,9 +74,55 @@ async function AddexpenseHandler(event){
           setAllExpenses(allexpenses);
        }
        
-    },[expenses]);
-     dataexpenses();
+    },[storedexpenses]);
      
+    dataexpenses();  
+
+    async function deleteexpenseHandler(item)
+    {
+      const response = await fetch(`${FIREBASE_DOMAIN}/expenses/${item.id}.json`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+    
+      if (!response.ok) {
+        alert(data.message || 'Could not delete');
+      }
+       else{
+          
+         alert('Expense has been deleted')    
+          
+      }
+      
+ 
+    }
+    const editexpenseHandler=(item)=>
+    {  
+      amountref.current.value=item.amount;
+      descriptionref.current.value=item.description;
+      categoryref.current.value=item.category;
+
+    fetch(`${FIREBASE_DOMAIN}/expenses/${item.id}.json`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res)=>
+      {    if (res)
+        {
+          return res.json().then(data=>
+            {
+              console.log("expense remmoved , now edit old one")
+            })
+        }
+          
+      })
+      
+
+    }
 return(
      <>
      <div className={classes.body}>
@@ -106,21 +155,33 @@ return(
        <Container className={classes.new}>
        <Row>
        { expenses.map(item=>
-         <Col className={classes.control}>{item.amount} {item.description} {item.category}</Col>
+         <div className={classes.control}>
+         <Col>Amount  : {item.amount} </Col>
+         <Col> Description : {item.description}</Col> 
+         <Col>Category : {item.category}</Col>
+         </div>
         )}
        </Row>
        </Container>
-       <Container className={classes.cont}>
-       <Row>
-       { storedexpenses.map(item=>
-         <Col className={classes.control}>{item.amount} {item.description} {item.category}</Col>
-        )}
-
-       </Row>
+       <Container>
+         <div className={classes.body2}><h1>All Expenses</h1></div>
+         <div ref={target}></div>
+       {storedexpenses.map(item=>
+         
+           <div id={item.id} className={classes.cont}>
+          <Row>
+         <Col> AMOUNT : {item.amount} </Col> 
+         <Col> DESC : {item.description}</Col>
+         <Col> CATEGORY : {item.category}</Col>
+         <button onClick={deleteexpenseHandler.bind(null,item)}>DELETE</button>
+        <Button variant="info" onClick={editexpenseHandler.bind(null,item)} >EDIT</Button>
+          </Row>
+          </div>
+          )
+             } 
        </Container>
-     </>
-
-    )
+       </>
+       ) 
 }
 
 export default Expenses;
