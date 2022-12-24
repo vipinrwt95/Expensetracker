@@ -114,3 +114,14 @@
     text-align: center;
     color:#b77be3;
   }
+  .body3 {
+    margin: 1.5rem auto;
+    width: 55%;
+    max-width: 25rem;
+    border-radius: 6px;
+    background-color: #aeecee;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 0.25rem;
+    text-align: center;
+    color:#ff6c09;
+  }

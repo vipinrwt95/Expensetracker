@@ -5,15 +5,16 @@ import Signup from "../components/Signup";
 import TokenContext from "../store/TokenContext";
 
 const Auth=()=>
-{  const authctx=useContext(TokenContext);
-  const [isloggedin,setLogin]=useState(false);
-  let content;
-  let text;
-  const LoginHandler=()=>
+{ 
+ const [isLoggedIn,setLogin]=useState(false); 
+ let content;
+ let text;
+
+const LoginHandler=()=>
   {
     setLogin(prev=>!prev);
   }  
- if(!isloggedin)
+ if(!isLoggedIn)
  {
    content=<Signup />  
    text='Already have an account,Login'

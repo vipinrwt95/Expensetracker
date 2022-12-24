@@ -2,9 +2,16 @@ import { Link,useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import TokenContext from "../store/TokenContext";
 import { Button } from "react-bootstrap";
+import { useSelector,useDispatch } from "react-redux";
+import { authActions } from "../store";
 const Home=()=>
-{   const navigate=useNavigate();
+{ 
+    const navigate=useNavigate();
+    const dispatch=useDispatch();
+
     const authctx=useContext(TokenContext);
+    const tokenid=useSelector(state=>state.auth.tokenid)
+    console.log(tokenid)
     const emailverificationHandler=()=>
     {
         fetch("https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCu84ggw5QyT2dJUlCmQvGfL2teJjDB1DE",
@@ -32,14 +39,15 @@ const Home=()=>
         })
      }   
      const logoutHandler=()=>
-     { console.log(authctx);
-      authctx.logout()
+     { 
+      dispatch(authActions.logout())
+      console.log(tokenid);
       navigate('/')
       
     } 
     const showExpensesHnadler=()=>
     {
-     if(authctx.isLoggedIn)
+     if(tokenid)
      {
         navigate('/expenses');
      }
@@ -50,7 +58,7 @@ const Home=()=>
      }
       
     }
-    console.log(authctx)
+    
 
   return(
        <>

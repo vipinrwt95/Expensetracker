@@ -1,10 +1,12 @@
 import Form from 'react-bootstrap/Form';
 import classes from './Expenses.module.css';
-import React,{useRef,useState,useCallback} from 'react';
+import React,{useRef,useState,useCallback, useEffect} from 'react';
 import { Container ,Overlay } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import { useSelector,useDispatch } from 'react-redux';
+import { ExpenseActions } from '../store';
 
 
 const FIREBASE_DOMAIN="https://expense-tracker-25829-default-rtdb.firebaseio.com/";
@@ -20,15 +22,22 @@ const Expenses=()=>
     const [storedexpenses,setAllExpenses]=useState([])
     const [edit,setEditwindow]=useState(false);
     const target = useRef(null);
+    const dispatch=useDispatch();
+    const expenseslist= useSelector(state=>state.expenses.expenses);
+    let amount=0;
+    for(let i of expenseslist)
+    {
+      amount=amount+Number(i.amount);
+    }
+    console.log(amount);
   
-async function AddexpenseHandler(event){ 
+    async function AddexpenseHandler(event){ 
     event.preventDefault()
     let amount=amountref.current.value;
     let description=descriptionref.current.value;
     let category=categoryref.current.value;
    
-
-    const expense={
+   const expense={
      amount:amount,
      description:description,
      category:category
@@ -53,7 +62,7 @@ async function AddexpenseHandler(event){
               
       }
      
-      const dataexpenses= useCallback(async ()=>{
+      const dataexpenses= async ()=>{
         const response = await fetch(`${FIREBASE_DOMAIN}/expenses.json`);
         const data = await response.json();
         
@@ -62,21 +71,26 @@ async function AddexpenseHandler(event){
           throw new Error(data.message || 'Could not fetch expenses.');
         }
       else{
+        let amount=0;
         for (const key in data) {
+             amount=amount+key.amount
             const quoteObj = {
               id: key,
               ...data[key],
             };
         
             allexpenses.push(quoteObj);
-            
           }
           setAllExpenses(allexpenses);
+        dispatch(ExpenseActions.push(allexpenses));
        }
        
-    },[storedexpenses]);
+    }
      
-    dataexpenses();  
+    useEffect(()=>
+    {
+    dataexpenses();
+    },[])
 
     async function deleteexpenseHandler(item)
     {
@@ -165,8 +179,8 @@ return(
        </Container>
        <Container>
          <div className={classes.body2}><h1>All Expenses</h1></div>
-         <div ref={target}></div>
-       {storedexpenses.map(item=>
+        {amount>10000  && <div className={classes.body3}>Go Premium</div>}
+       {expenseslist.map(item=>
          
            <div id={item.id} className={classes.cont}>
           <Row>

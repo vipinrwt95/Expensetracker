@@ -3,13 +3,17 @@ import { Form, } from "react-bootstrap"
 import classes from './Signupform.module.css'
 import TokenContext from "../store/TokenContext"
 import {Link, useNavigate} from 'react-router-dom';
+import { authActions } from "../store";
+import { useSelector,useDispatch } from "react-redux";
 
 const Login=()=>
 {   const Navigate=useNavigate();
     const authctx=useContext(TokenContext);
     const emailref=useRef();
     const passwordref=useRef();
-    
+    const dispatch=useDispatch();
+    const authStatus=useSelector(state=>state.isloggedin);
+    const tokenid=useSelector(state=>state.auth.tokenid);
     
     const formSubmitHandler=(event)=>
     {     
@@ -34,7 +38,7 @@ const Login=()=>
             {
               return res.json().then(data=>
                 {
-                 authctx.login(data.idToken)
+                 dispatch(authActions.login(data.idToken))
                  Navigate('./home')
                     
             })
