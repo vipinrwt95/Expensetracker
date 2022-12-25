@@ -9,13 +9,17 @@ import Home from './Pages/Home';
 import Profile from './Pages/Profile';
 import ResetPassword from './Pages/ResetPassword';
 import Expenses from './Pages/Expenses';
+import { useSelector,useDispatch } from 'react-redux';
+
 function App() {
+  
   const authctx=useContext(TokenContext)
   const isloggedin=authctx.isLoggedIn
-  console.log(authctx);
+  const mode=useSelector(state=>state.theme.mode)
   return (
+    <div className={mode}>
      <TokenProvider>
-       <div className="App">
+      
      <Routes>
 
     <Route path='/' exact element={<Auth />}></Route>
@@ -25,8 +29,9 @@ function App() {
     </Route>
     <Route path='/expenses' element={<Expenses />}></Route>
      </Routes>
-    </div>
+   
      </TokenProvider>
+     </div>
   
   );
 }

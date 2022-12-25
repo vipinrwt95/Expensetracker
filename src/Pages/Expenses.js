@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { useSelector,useDispatch } from 'react-redux';
 import { ExpenseActions } from '../store';
+import { ThemeActions } from '../store';
 
 
 const FIREBASE_DOMAIN="https://expense-tracker-25829-default-rtdb.firebaseio.com/";
@@ -19,11 +20,13 @@ const Expenses=()=>
     const descriptionref=useRef();
     const categoryref=useRef();
     const [expenses,setExpenses]=useState([])
-    const [storedexpenses,setAllExpenses]=useState([])
+    const [links,linkadded]=useState(null)
     const [edit,setEditwindow]=useState(false);
     const target = useRef(null);
     const dispatch=useDispatch();
     const expenseslist= useSelector(state=>state.expenses.expenses);
+    let blob;
+    
     let amount=0;
     for(let i of expenseslist)
     {
@@ -81,8 +84,17 @@ const Expenses=()=>
         
             allexpenses.push(quoteObj);
           }
-          setAllExpenses(allexpenses);
+          
         dispatch(ExpenseActions.push(allexpenses));
+        console.log(allexpenses)
+        blob=new Blob([makeCSV(allexpenses)])
+        function makeCSV(rows){
+          return rows.map(r =>
+            amount=`${r.amount} ${r.description} `,
+          )
+        }
+        const link=URL.createObjectURL(blob)
+        linkadded(link);
        }
        
     }
@@ -137,6 +149,13 @@ const Expenses=()=>
       
 
     }
+    const switchThemeHandler=()=>
+    {
+        dispatch(ThemeActions.toggle())
+    }
+      
+    
+   
 return(
      <>
      <div className={classes.body}>
@@ -179,7 +198,7 @@ return(
        </Container>
        <Container>
          <div className={classes.body2}><h1>All Expenses</h1></div>
-        {amount>10000  && <div className={classes.body3}>Go Premium</div>}
+        {amount>10000  && <div className={classes.body3}><Button onClick={switchThemeHandler}>Go Premium</Button></div>}
        {expenseslist.map(item=>
          
            <div id={item.id} className={classes.cont}>
@@ -194,6 +213,7 @@ return(
           )
              } 
        </Container>
+       <a href={links} id='a2' download='expenses.csv'>Download your expenses</a>
        </>
        ) 
 }
